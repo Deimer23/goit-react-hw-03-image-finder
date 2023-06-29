@@ -4,7 +4,7 @@ import ImageGallery from "./ImageGallery/ImageGallery";
 import ImageGalleryItem from "./ImageGalleryItem/ImageGalleryItem";
 import Button from "./Button/Button";
 import Modal from "./Modal/Modal";
-import  request  from "path/to/services/Requestsapi/Requestsapi";
+import  getImage from "path/to/services/Requestsapi/Requestsapi";
 import { BallTriangle } from "react-loader-spinner";
 
 class App extends React.Component {
@@ -28,11 +28,16 @@ class App extends React.Component {
     const query = e.currentTarget.elements.query.value;
     if(query !== ""){
       this.setState({isLoading:true, query:query, page:2})
-      const response = await request.getImage(this.generarURL(query), this.state.page);    
-      this.setState({
-        article: response.hits,
-        isLoading: false,
-      })      
+      try {
+        const response = await getImage(this.generarURL(query), this.state.page);    
+        this.setState({
+          article: response.hits,
+          isLoading: false,
+        }) 
+      } catch (error) {
+        console.log(error)
+      }
+          
     }else{
       alert('Por favor inserte lo que desea buscar')
     }         
@@ -42,7 +47,7 @@ class App extends React.Component {
     this.setState(prevState => {
       return {page: this.state.page + 1, isLoading:true}
     })    
-    const response = await request.getImage(this.state.query, this.state.page);    
+    const response = await getImage(this.state.query, this.state.page);    
       this.setState({
         article: response.hits,
         isLoading: false,
