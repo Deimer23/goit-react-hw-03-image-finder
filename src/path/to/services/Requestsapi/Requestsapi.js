@@ -5,6 +5,4 @@ async function getImage(query, page){
     return response.data;
 }
 
-export default ({
-    getImage,
-})
+export default getImage;
